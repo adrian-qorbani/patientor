@@ -1,4 +1,5 @@
-export type Gender = "Male" | "Female" | "Other";
+// export type Gender = "Male" | "Female" | "Other";
+export enum Gender {Male = 'Male', Female = 'Female', Other = 'Other'}
 
 export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>; //type alias for omit utility type (censoring 'ssn')
 export type NewPatientEntry = Omit<PatientEntry, 'id'>;
