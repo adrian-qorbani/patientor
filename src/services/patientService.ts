@@ -1,14 +1,17 @@
-import patientsData from "../../data/patient_entries.json";
+import patientsData from "../../data/patients_entries";
+import { PatientEntry } from "../types/types";
 
-const getEntries = () => {
-  return patientsData;
+const entires: PatientEntry[] = patientsData;
+
+const getPatientsEntry = (): PatientEntry[] => {
+  return entires;
 };
 
-const addEntry = () => {
+const addPatientEntry = () => {
   return null;
 };
 
 export default {
-  getEntries,
-  addEntry,
+  getPatientsEntry,
+  addPatientEntry,
 };
