@@ -4,7 +4,8 @@ import getPatientsEntry from "../services/patientService"
 const router = express.Router();
 
 router.get('/', (_req, res) => {
-  res.send(getPatientsEntry);
+  const patientsEntry = getPatientsEntry();
+  res.json(patientsEntry); 
 });
 
 router.post('/', (_req, res) => {
