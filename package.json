@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "tsc": "tsc",
     "dev": "ts-node-dev index.ts",
+    "start": "node build/index.js",
     "lint": "eslint --ext .ts ."
   },
   "author": "mahdi ghorbani",
@@ -16,6 +17,7 @@
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   },
