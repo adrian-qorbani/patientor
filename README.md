@@ -1,2 +1,2 @@
-# patientor
-a medical record application for handling diagnoses and basic health information of  patients
+# Patientor
+a fullstack medical record application for handling diagnoses and patients health information.
