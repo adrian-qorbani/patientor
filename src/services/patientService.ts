@@ -19,6 +19,11 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   }));
 };
 
+const findById = (id: string): PatientEntry | undefined => {
+  const entry = entires.find(d => d.id === id);
+  return entry;
+};
+
 const addPatientEntry = () => {
   return null;
 };
@@ -26,5 +31,6 @@ const addPatientEntry = () => {
 export default {
   getPatientsEntry,
   addPatientEntry,
-  getNonSensitiveEntries
+  getNonSensitiveEntries,
+  findById
 };
