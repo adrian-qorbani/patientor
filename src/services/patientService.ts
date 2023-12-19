@@ -1,10 +1,22 @@
 import patientsData from "../../data/patients_entries";
-import { PatientEntry } from "../types/types";
+import { NonSensitivePatientEntry ,PatientEntry } from "../types/types";
 
 const entires: PatientEntry[] = patientsData;
 
+// All entries
 const getPatientsEntry = (): PatientEntry[] => {
   return entires;
+};
+
+// All entries (-ssn)
+const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
+  return entires.map(({ id, name, gender, occupation, dateOfBirth }) => ({
+    id,
+    name,
+    gender,
+    occupation,
+    dateOfBirth,
+  }));
 };
 
 const addPatientEntry = () => {
@@ -14,4 +26,5 @@ const addPatientEntry = () => {
 export default {
   getPatientsEntry,
   addPatientEntry,
+  getNonSensitiveEntries
 };

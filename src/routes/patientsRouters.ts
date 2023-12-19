@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get('/', (_req, res) => {
   // const patientsEntry = patientService.getPatientsEntry();
-  res.json(patientService.getPatientsEntry()); 
+  res.json(patientService.getNonSensitiveEntries()); 
 });
 
 router.post('/', (_req, res) => {

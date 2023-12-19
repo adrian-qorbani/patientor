@@ -1,13 +1,13 @@
 import express from "express";
-import patientsRouters from "./routes/patientsRouters"
-import diagnosesRouters from "./routes/diagnosesRouter"
+import patientsRouters from "./routes/patientsRouters";
+import diagnosesRouters from "./routes/diagnosesRouter";
 
-const cors = require('cors')
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }))
-app.use(cors())
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 const PORT = 3001;
 
 app.get("/api/ping", (_req, res) => {
@@ -15,9 +15,8 @@ app.get("/api/ping", (_req, res) => {
   res.send("pong");
 });
 
-app.use('/api/patients', patientsRouters);
-app.use('/api/diagnoses', diagnosesRouters);
-
+app.use("/api/patients", patientsRouters);
+app.use("/api/diagnoses", diagnosesRouters);
 
 app.listen(PORT, () => {
   console.log(`Server running on port http://localhost:${PORT}`);
