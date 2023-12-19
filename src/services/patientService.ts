@@ -5,16 +5,13 @@ const entires: PatientEntry[] = patientsData;
 
 const getPatientsEntry = (): PatientEntry[] => {
   return entires;
-
 };
 
-// const addPatientEntry = () => {
-//   return null;
-// };
+const addPatientEntry = () => {
+  return null;
+};
 
-// export default {
-//   getPatientsEntry,
-//   addPatientEntry,
-// };
-
-export default getPatientsEntry
+export default {
+  getPatientsEntry,
+  addPatientEntry,
+};

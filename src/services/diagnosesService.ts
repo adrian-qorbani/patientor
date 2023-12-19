@@ -7,13 +7,11 @@ const getDiagnosesData = (): DiagnosesEntry[] => {
   return data;
 };
 
-// const addPatientEntry = () => {
-//   return null;
-// };
+const addDiagnosesData = () => {
+  return null;
+};
 
-// export default {
-//   getDiagnosesData,
-//   addPatientEntry,
-// };
-
-export default getDiagnosesData
+export default {
+  getDiagnosesData,
+  addDiagnosesData,
+};
