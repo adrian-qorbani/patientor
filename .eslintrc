@@ -2,7 +2,8 @@
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "prettier"
   ],
   "plugins": ["@typescript-eslint"],
   "env": {
@@ -11,7 +12,7 @@
     "node": true
   },
   "rules": {
-    "@typescript-eslint/semi": ["error"],
+    "@typescript-eslint/semi": ["error"], //might disable as it conflicts with prettier
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
