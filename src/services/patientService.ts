@@ -15,12 +15,13 @@ const getPatientsEntry = (): PatientEntry[] => {
 
 // All entries (-ssn)
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
-  return entires.map(({ id, name, gender, occupation, dateOfBirth }) => ({
+  return entires.map(({ id, name, gender, occupation, dateOfBirth, entries }) => ({
     id,
     name,
     gender,
     occupation,
     dateOfBirth,
+    entries
   }));
 };
 

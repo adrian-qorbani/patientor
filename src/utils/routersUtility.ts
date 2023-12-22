@@ -1,6 +1,6 @@
 // for request proofing send requests
 
-import { Gender, NewPatientEntry } from "../types/types";
+import { Gender, Entry, NewPatientEntry } from "../types/types";
 
 const toNewPatientEntry = (object: unknown): NewPatientEntry => {
   // guard: type narrowing for object
@@ -12,7 +12,8 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
     "gender" in object &&
     "occupation" in object &&
     "dateOfBirth" in object &&
-    "ssn" in object
+    "ssn" in object &&
+    "entries" in object
   ) {
     const newEntry: NewPatientEntry = {
       name: parseName(object.name),
@@ -20,11 +21,19 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
       occupation: parseOccupation(object.occupation),
       dateOfBirth: parseDateOfBirth(object.dateOfBirth),
       ssn: parseSsn(object.ssn),
+      entries: parseEntries(object.entries),
     };
 
     return newEntry;
   }
   throw new Error("Incorrect Data: some fields are missing");
+};
+
+const isEntry = (entry: unknown): entry is Entry => {
+  if (typeof entry === "object" && entry !== null) {
+    return true;
+  }
+  return false;
 };
 
 // type guards
@@ -42,9 +51,16 @@ const isGender = (param: string): param is Gender => {
     .includes(param);
 };
 
-// const isDate = (date: unknown): date is string => {
-//   return typeof date === "string" && Boolean(Date.parse(date));
-// };
+const isEntryArray = (entries: unknown): entries is Entry[] => {
+  if (!Array.isArray(entries)) return false;
+
+  for (const entry of entries) {
+    if (!isEntry(entry)) {
+      return false;
+    }
+  }
+  return true;
+};
 
 // object parsers
 const parseSsn = (ssn: unknown): string => {
@@ -80,6 +96,13 @@ const parseOccupation = (occupation: unknown): string => {
     throw new Error("Incorrect or missing ssn.");
   }
   return occupation;
+};
+
+const parseEntries = (entries: unknown): Entry[] => {
+  if (!isEntryArray(entries)) {
+    throw new Error("Incorrect or missing entries.");
+  }
+  return entries;
 };
 
 export default toNewPatientEntry;

@@ -77,6 +77,7 @@ describe('Patients route and services on api/patients', () => {
       occupation: 'Developer',
       dateOfBirth: '1996-01-01',
       ssn: '333-45-6789',
+      entries: []
     };
 
     const response = await request(app)
