@@ -1,6 +1,6 @@
 // for request proofing send requests
 
-import { Gender, Entry, NewPatientEntry } from "../types/types";
+import { Gender, NewPatientEntry, SpecificEntry } from "../types/types";
 
 const toNewPatientEntry = (object: unknown): NewPatientEntry => {
   // guard: type narrowing for object
@@ -29,13 +29,6 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
   throw new Error("Incorrect Data: some fields are missing");
 };
 
-const isEntry = (entry: unknown): entry is Entry => {
-  if (typeof entry === "object" && entry !== null) {
-    return true;
-  }
-  return false;
-};
-
 // type guards
 const isString = (text: unknown): text is string => {
   return typeof text === "string" || text instanceof String;
@@ -51,15 +44,30 @@ const isGender = (param: string): param is Gender => {
     .includes(param);
 };
 
-const isEntryArray = (entries: unknown): entries is Entry[] => {
+const isSpecificEntryArray = (entries: unknown): entries is SpecificEntry[] => {
   if (!Array.isArray(entries)) return false;
 
   for (const entry of entries) {
-    if (!isEntry(entry)) {
+    if (!isSpecificEntry(entry)) {
       return false;
     }
   }
   return true;
+};
+
+const isSpecificEntry = (entry: unknown): entry is SpecificEntry => {
+  if (typeof entry === "object" && entry !== null) {
+    if ("discharge" in entry) {
+      return true; // HospitalEntry
+    }
+    if ("employerName" in entry) {
+      return true; // OccupationalHealthcareEntry
+    }
+    if ("healthCheckRating" in entry) {
+      return true; // HealthCheckEntry
+    }
+  }
+  return false;
 };
 
 // object parsers
@@ -98,8 +106,8 @@ const parseOccupation = (occupation: unknown): string => {
   return occupation;
 };
 
-const parseEntries = (entries: unknown): Entry[] => {
-  if (!isEntryArray(entries)) {
+const parseEntries = (entries: unknown): SpecificEntry[] => {
+  if (!isSpecificEntryArray(entries)) {
     throw new Error("Incorrect or missing entries.");
   }
   return entries;
