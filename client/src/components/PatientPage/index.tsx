@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-// import axios from "axios";
+import axios from "axios";
 
-import { PatientEntry } from "../../types";
+import { DiagnosesEntry, PatientEntry } from "../../types";
 
-import { getPatientById } from "../../services/patients";
+import patientService from "../../services/patients";
+import diagnosesService from "../../services/diagnoses";
 
 interface PatientInfoProps {
   patients: PatientEntry[];
@@ -14,6 +15,9 @@ interface PatientInfoProps {
 const PatientPage: React.FC<PatientInfoProps> = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<PatientEntry | null>(null);
+  const [diagnoses, setDiagnoses] = useState<Record<string, DiagnosesEntry>>(
+    {}
+  );
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +25,7 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
     const fetchPatientInfo = async () => {
       try {
         if (id) {
-          const patientData = await getPatientById(id);
+          const patientData = await patientService.getPatientById(id);
           setPatient(patientData);
         } else {
           setError("Patient ID is not defined.");
@@ -35,6 +39,26 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
 
     fetchPatientInfo();
   }, [id]);
+
+  useEffect(() => {
+    const fetchDiagnoses = async () => {
+      try {
+        // const diagnoseData = await axios.get<DiagnosesEntry[]>("http://localhost:3001/api/diagnoses");
+        const diagnoseData = await diagnosesService.getAll();
+
+        setDiagnoses(
+          diagnoseData.reduce((acc, diagnosis) => {
+            acc[diagnosis.code] = diagnosis;
+            return acc;
+          }, {} as Record<string, DiagnosesEntry>)
+        );
+      } catch (error) {
+        console.error("Error fetching diagnoses:", error);
+      }
+    };
+
+    fetchDiagnoses();
+  }, []);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -57,12 +81,38 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
       <p>Gender: {patient.gender}</p>
       {patient.ssn && <p>SSN: {patient.ssn}</p>}
       {patient.dateOfBirth && <p>Date of Birth: {patient.dateOfBirth}</p>}
+      {patient.entries.length > 0 ? (
+        <strong>Entries:</strong>
+      ) : (
+        <>
+          <p>no entires submitted.</p>
+        </>
+      )}
       <ol>
         {patient.entries.map((entry) => (
           <li key={entry.id}>
             <div>{entry.date}:</div>
             <div>{entry.description}</div>
-            <div>{entry.diagnosisCodes}</div>
+            <div>
+              {entry.diagnosisCodes && (
+                <div>
+                  <strong>Diagnoses:</strong>
+                  <ul>
+                    {entry.diagnosisCodes.map((code) => (
+                      <li key={code}>
+                        {diagnoses[code] ? (
+                          <span>
+                            <strong>{code}:</strong> {diagnoses[code].name}{" "}
+                          </span>
+                        ) : (
+                          <span>{code}</span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
             <div>-{entry.specialist}</div>
           </li>
         ))}

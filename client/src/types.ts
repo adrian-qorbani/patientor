@@ -66,3 +66,7 @@ export interface DiagnosesEntry {
   name: string;
   latin?: string;
 }
+
+export interface PatientFormValues {
+  // 
+}
