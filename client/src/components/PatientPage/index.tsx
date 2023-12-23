@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+
 // import axios from "axios";
 
-import { Patient } from "../../types";
+import { PatientEntry } from "../../types";
 
-import {getPatientById} from "../../services/patients";
+import { getPatientById } from "../../services/patients";
 
 interface PatientInfoProps {
-  patients: Patient[];
+  patients: PatientEntry[];
 }
-
 
 const PatientPage: React.FC<PatientInfoProps> = () => {
   const { id } = useParams<{ id: string }>();
-  const [patient, setPatient] = useState<Patient | null>(null);
+  const [patient, setPatient] = useState<PatientEntry | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,15 +24,15 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
           const patientData = await getPatientById(id);
           setPatient(patientData);
         } else {
-          setError('Patient ID is not defined.');
+          setError("Patient ID is not defined.");
         }
       } catch (err) {
-        setError('Error fetching patient information.');
+        setError("Error fetching patient information.");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchPatientInfo();
   }, [id]);
 
@@ -57,6 +57,16 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
       <p>Gender: {patient.gender}</p>
       {patient.ssn && <p>SSN: {patient.ssn}</p>}
       {patient.dateOfBirth && <p>Date of Birth: {patient.dateOfBirth}</p>}
+      <ol>
+        {patient.entries.map((entry) => (
+          <li key={entry.id}>
+            <div>{entry.date}:</div>
+            <div>{entry.description}</div>
+            <div>{entry.diagnosisCodes}</div>
+            <div>-{entry.specialist}</div>
+          </li>
+        ))}
+      </ol>
     </div>
   );
 };
