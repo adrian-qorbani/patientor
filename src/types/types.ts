@@ -1,8 +1,22 @@
-export enum Gender {Male = 'Male', Female = 'Female', Other = 'Other'}
-export type SpecificEntry = HospitalEntry | OccupationalHealthcareEntry | HealthCheckEntry;
+export enum Gender {
+  Male = "Male",
+  Female = "Female",
+  Other = "Other",
+}
+export type SpecificEntry =
+  | HospitalEntry
+  | OccupationalHealthcareEntry
+  | HealthCheckEntry;
 
-export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>; //type alias for omit utility type (censoring 'ssn')
-export type NewPatientEntry = Omit<PatientEntry, 'id'>;
+export enum HealthCheckRating {
+  "Healthy" = 0,
+  "LowRisk" = 1,
+  "HighRisk" = 2,
+  "CriticalRisk" = 3,
+}
+
+export type NonSensitivePatientEntry = Omit<PatientEntry, "ssn">; //type alias for omit utility type (censoring 'ssn')
+export type NewPatientEntry = Omit<PatientEntry, "id">;
 
 export interface Entry {
   id: string;
@@ -11,8 +25,9 @@ export interface Entry {
 }
 
 export interface HospitalEntry extends Entry {
-  type: 'Hospital';
-  diagnosisCodes: string[];
+  type: "Hospital";
+  // diagnosisCodes: string[];
+  diagnosisCodes?: Array<DiagnosesEntry["code"]>;
   description: string;
   discharge: {
     date: string;
@@ -21,9 +36,9 @@ export interface HospitalEntry extends Entry {
 }
 
 export interface OccupationalHealthcareEntry extends Entry {
-  type: 'OccupationalHealthcare';
+  type: "OccupationalHealthcare";
   employerName: string;
-  diagnosisCodes: string[];
+  diagnosisCodes?: Array<DiagnosesEntry["code"]>;
   description: string;
   sickLeave: {
     startDate: string;
@@ -32,9 +47,9 @@ export interface OccupationalHealthcareEntry extends Entry {
 }
 
 export interface HealthCheckEntry extends Entry {
-  type: 'HealthCheck';
+  type: "HealthCheck";
   description: string;
-  healthCheckRating: number;
+  healthCheckRating: HealthCheckRating;
 }
 
 export interface PatientEntry {
@@ -45,7 +60,7 @@ export interface PatientEntry {
   dateOfBirth: string;
   ssn: string;
   comment?: string;
-  entries: SpecificEntry[]
+  entries: SpecificEntry[];
 }
 
 export interface DiagnosesEntry {
@@ -53,4 +68,3 @@ export interface DiagnosesEntry {
   name: string;
   latin?: string;
 }
-
