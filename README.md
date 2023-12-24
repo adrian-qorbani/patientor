@@ -1,22 +1,50 @@
 # Patientor: Medical Record Application
 
-A fullstack medical record application designed for managing diagnoses and basic health information of patients. It's built using TypeScript, React, Express, Material-UI, and utilizes Prettier and ESLint for code formatting and linting. The frontend and backend are bundled using Vite. It's an extended/enhanced version of my certification project for [FullStackOpen's Typescript Development Course](https://fullstackopen.com/en/part9/).
+A full-stack medical record application designed to handle diagnoses and health information of patients. The project is written in strictly typed TypeScript and utilizes a technology stack that includes but not limited to React, MaterialUI, Node.js (Express), and is tested with Jest, bundled with Vite. The codebase is formatted using ESLint and Prettier. The communication between the frontend and backend is achieved through a RESTful API. Project utilizes [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for versioning and documentation. It's an extended/enhanced version of my certification project for [FullStackOpen's Typescript Development Course](https://fullstackopen.com/en/part9/).
 
 ## Technologies Used
 
-### Frontend
+- Languages: TypeScript, JavaScript
+- Vite
 - React
-- TypeScript
+- Node.js (Express.js)
 - Material-UI
-
-### Backend
-- Node.js (Express)
-- TypeScript
+- Jest
 
 ### Formating/Linting
 - Prettier
 - ESLint
 - ESlint-config-prettier
+
+## Project Structure
+
+- **`/client`**: Contains the React application for the frontend.
+- **`/src`**: Houses the Express server for the backend.
+- **`/src/__tests__`**: Holds the Jest tests for the server.
+- **`/client/__tests__`**: Holds the Jest tests for the client. (not implanted yet)
+- **`/e2e/`**: Holds the Cypress tests for the end-to-end testing. (not implanted yet)
+
+## Features (completed and pending)
+
+- [x] Utilize conventional commits for versioning and documentation
+- [x] Set up React and Express, establish connection using RESTful API
+- [x] Set up ESLint and Prettier for code linting and formatting
+- [x] Use TypeScript for strict typing
+- [x] Implement user interface for displaying patient information, addition and entries entry
+- [x] Implement RESTful API for handling patient information
+- [x] Use MaterialUI for styling and components
+- [x] Integrate Jest for unit testing backend endpoints
+- [ ] Integrate Jest for unit testing frontend
+- [ ] Conduct Cypress for end-to-end testing
+- [ ] Enhance frontend for better user experience
+- [ ] Implement user administration and authentication
+- [ ] Integrate user administration and authentication
+- [ ] Integrate MongoDB for data storage and users
+- [ ] Refactor client code for better maintainability
+- [x] Refactor server code for better maintainability
+- [ ] Enhance error handling in the backend
+- [ ] Implement continuous integration for automated testing and deployment
+
 
 ## Getting Started
 
