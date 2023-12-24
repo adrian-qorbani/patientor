@@ -12,10 +12,11 @@ import {
 import { SpecificEntry } from "../../types";
 
 interface EntryFormProps {
-  onEntrySubmit: (entry: Omit<SpecificEntry, "id">) => void;
+  // onEntrySubmit: (entry: Omit<SpecificEntry, "id">) => void;
+  patientId: string;
 }
 
-const EntryForm: React.FC<EntryFormProps> = ({ onEntrySubmit }) => {
+const EntryForm: React.FC<EntryFormProps> = ({  patientId }) => {
   const [entryType, setEntryType] = useState<
     "Hospital" | "OccupationalHealthcare" | "HealthCheck"
   >("Hospital");
@@ -46,7 +47,7 @@ const EntryForm: React.FC<EntryFormProps> = ({ onEntrySubmit }) => {
     // turns diagnoses codes seperated by commas into an array of diagnoses (needs fixing as async function delays its input)
     const newArray = diagnosesCode.split(",").map((item) => item.trim());
     setDiagnosisCodes(newArray);
-    
+
     // Create entry based on the selected type
     const newEntry: Omit<SpecificEntry, "id"> = {
       type: entryType,
@@ -72,17 +73,21 @@ const EntryForm: React.FC<EntryFormProps> = ({ onEntrySubmit }) => {
       }),
     };
 
-    console.log("Entry is:", newEntry)
+    console.log("Entry is:", newEntry);
 
     try {
+
       // Make a POST request to your backend endpoint
-      const response = await fetch("http://loc", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newEntry),
-      });
+      const response = await fetch(
+        `http://localhost:3001/api/patients/${patientId}/entries`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(newEntry),
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();
@@ -90,11 +95,14 @@ const EntryForm: React.FC<EntryFormProps> = ({ onEntrySubmit }) => {
           ...newEntry,
           id: responseData.id,
         } as SpecificEntry;
-        onEntrySubmit(entryWithId);
+
+        // onEntrySubmit(entryWithId);
+
+        console.log("entry with id: ", entryWithId);
 
         // reset form
         setDate("2023-01-01");
-        setSpecialist("Dr. Smith");
+        setSpecialist("");
         setDescription("");
         setStartDate("");
         setEndDate("");

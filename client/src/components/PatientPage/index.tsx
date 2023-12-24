@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { styled } from "@mui/system";
 import { List, ListItem } from "@mui/material";
 
-
 import HospitalIcon from "@mui/icons-material/LocalHospital";
 import WorkIcon from "@mui/icons-material/Work";
 import MonitorHeart from "@mui/icons-material/MonitorHeart";
@@ -19,6 +18,7 @@ import EntryForm from "./AddEntryForm";
 
 interface PatientInfoProps {
   patients: PatientEntry[];
+  entries: SpecificEntry[];
 }
 
 const StyledList = styled(List)({
@@ -40,14 +40,16 @@ const StyledListItem = styled(ListItem)({
   },
 });
 
-const getIconStyles = (entryType: SpecificEntry['type']): React.CSSProperties => {
+const getIconStyles = (
+  entryType: SpecificEntry["type"]
+): React.CSSProperties => {
   switch (entryType) {
-    case 'Hospital':
-      return { color: 'blue' }; // Adjust color as needed
-    case 'OccupationalHealthcare':
-      return { color: 'orange' }; // Adjust color as needed
-    case 'HealthCheck':
-      return { color: 'green' }; // Adjust color as needed
+    case "Hospital":
+      return { color: "blue" }; // Adjust color as needed
+    case "OccupationalHealthcare":
+      return { color: "orange" }; // Adjust color as needed
+    case "HealthCheck":
+      return { color: "green" }; // Adjust color as needed
     default:
       return {};
   }
@@ -69,6 +71,7 @@ const getIconForEntryType = (entryType: SpecificEntry["type"]) => {
 const PatientPage: React.FC<PatientInfoProps> = () => {
   const { id } = useParams<{ id: string }>();
   const [patient, setPatient] = useState<PatientEntry | null>(null);
+
   const [diagnoses, setDiagnoses] = useState<Record<string, DiagnosesEntry>>(
     {}
   );
@@ -92,7 +95,7 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
     };
 
     fetchPatientInfo();
-  }, [id]);
+  }, [patient]);
 
   useEffect(() => {
     const fetchDiagnoses = async () => {
@@ -142,8 +145,7 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
         </>
       )}
 
-      {/* temp: buggy EntryForm, testing purpose only */}
-      <EntryForm />
+      <EntryForm patientId={patient.id} />
 
       <StyledList>
         {patient.entries.map((entry) => (
