@@ -145,4 +145,29 @@ describe('POST /patients/:id/entries', () => {
     expect(response.status).toBe(404);
     expect(response.body.error).toBe('Patient not found');
   });
+
+  test('adds a new OccupationalHealthcare entry for an existing patient', async () => {
+    const response = await request(app)
+      .post('/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries')
+      .send({
+        date: '2023-01-03',
+        specialist: 'Dr. Anderson',
+        type: 'OccupationalHealthcare',
+        description: 'Work-related injury',
+        employerName: 'Tech Corp',
+        diagnosisCodes: ['C789'],
+        sickLeave: {
+          startDate: '2023-01-03',
+          endDate: '2023-01-10',
+        },
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.id).toBeTruthy();
+    expect(response.body.type).toBe('OccupationalHealthcare');
+    expect(response.body.diagnosisCodes).toEqual(['C789']);
+    expect(response.body.sickLeave.startDate).toBe('2023-01-03');
+    expect(response.body.sickLeave.endDate).toBe('2023-01-10');
+    expect(data[0].entries.length).toBe(3);
+  });
 });
