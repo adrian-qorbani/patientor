@@ -1,7 +1,7 @@
 import { PatientEntry, Gender } from "../src/types/types";
 import toNewPatientEntry from "../src/utils/routersUtility";
 
-const data = [
+export const data = [
   {
     id: 'd2773336-f723-11e9-8f0b-362b9e155667',
     name: 'John McClane',

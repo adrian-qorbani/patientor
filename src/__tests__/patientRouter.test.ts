@@ -1,6 +1,9 @@
 import request from 'supertest';
 import app from '../app'; 
 import { Gender, NewPatientEntry } from '../types/types';
+import { data } from '../../data/patients_entries'; // patients' list
+
+console.log(data)
 
 describe('Express server main entry', () => {
   it('GET /api/ping should return (pong) 200', async () => {
@@ -108,4 +111,38 @@ describe('Patients route and services on api/patients', () => {
 
   // type script checks NewPatientEntry for typing everytime, so no badly formatted patients are submitted
 
+});
+
+describe('POST /patients/:id/entries', () => {
+  test('adds a new entry for an existing patient', async () => {
+    const response = await request(app)
+      .post('/api/patients/d2773336-f723-11e9-8f0b-362b9e155667/entries')
+      .send({
+        date: '2023-01-01',
+        specialist: 'Dr. Smith',
+        type: 'HealthCheck',
+        description: 'Routine checkup',
+        healthCheckRating: 0,
+      });
+
+    expect(response.status).toBe(201);
+    expect(response.body.id).toBeTruthy();
+    expect(response.body.type).toBe('HealthCheck');
+    expect(data[0].entries.length).toBe(2);
+  });
+
+  test('returns 404 for a non-existing patient', async () => {
+    const response = await request(app)
+      .post('/api/patients/d2773sd6-f723-11e9-8f0b-362b9e155667/entries')
+      .send({
+        date: '2023-01-01',
+        specialist: 'Dr. Smith',
+        type: 'HealthCheck',
+        description: 'Routine checkup',
+        healthCheckRating: 0,
+      });
+
+    expect(response.status).toBe(404);
+    expect(response.body.error).toBe('Patient not found');
+  });
 });
