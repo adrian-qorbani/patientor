@@ -11,12 +11,14 @@ import {
 } from "@mui/material";
 import { SpecificEntry } from "../../types";
 
+import patientService from "../../services/patients";
+
 interface EntryFormProps {
   // onEntrySubmit: (entry: Omit<SpecificEntry, "id">) => void;
   patientId: string;
 }
 
-const EntryForm: React.FC<EntryFormProps> = ({  patientId }) => {
+const EntryForm: React.FC<EntryFormProps> = ({ patientId }) => {
   const [entryType, setEntryType] = useState<
     "Hospital" | "OccupationalHealthcare" | "HealthCheck"
   >("Hospital");
@@ -54,7 +56,7 @@ const EntryForm: React.FC<EntryFormProps> = ({  patientId }) => {
       date,
       specialist,
       description,
-      diagnosisCodes,
+      diagnosisCodes: newArray,
       ...(entryType === "Hospital" && {
         discharge: {
           date: dischargeDate,
@@ -76,17 +78,9 @@ const EntryForm: React.FC<EntryFormProps> = ({  patientId }) => {
     console.log("Entry is:", newEntry);
 
     try {
-
-      // Make a POST request to your backend endpoint
-      const response = await fetch(
-        `http://localhost:3001/api/patients/${patientId}/entries`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(newEntry),
-        }
+      const response = await patientService.addEntryToPatient(
+        patientId,
+        newEntry
       );
 
       if (response.ok) {
@@ -95,8 +89,6 @@ const EntryForm: React.FC<EntryFormProps> = ({  patientId }) => {
           ...newEntry,
           id: responseData.id,
         } as SpecificEntry;
-
-        // onEntrySubmit(entryWithId);
 
         console.log("entry with id: ", entryWithId);
 

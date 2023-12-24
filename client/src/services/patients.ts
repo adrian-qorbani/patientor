@@ -1,5 +1,5 @@
 import axios from "axios";
-import { PatientEntry, PatientFormValues } from "../types";
+import { PatientEntry, PatientFormValues, SpecificEntry } from "../types";
 
 import { apiBaseUrl } from "../constants";
 
@@ -27,8 +27,33 @@ const create = async (object: PatientFormValues) => {
   return data;
 };
 
+const addEntryToPatient = async (
+  patientId: string,
+  newEntry: object
+): Promise<Response> => {
+  try {
+    const response = await fetch(`${apiBaseUrl}/patients/${patientId}/entries`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newEntry),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add entry to patient.');
+    }
+
+    return response;
+  } catch (error) {
+    console.error('Error adding entry to patient:', error);
+    throw error;
+  }
+};
+
 export default {
   getAll,
   create,
-  getPatientById
+  getPatientById,
+  addEntryToPatient
 };
