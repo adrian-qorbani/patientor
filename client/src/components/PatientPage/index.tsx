@@ -15,6 +15,8 @@ import { DiagnosesEntry, PatientEntry, SpecificEntry } from "../../types";
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
 
+import EntryForm from "./AddEntryForm";
+
 interface PatientInfoProps {
   patients: PatientEntry[];
 }
@@ -139,6 +141,10 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
           <p>no entires submitted.</p>
         </>
       )}
+
+      {/* temp: buggy EntryForm, testing purpose only */}
+      <EntryForm />
+
       <StyledList>
         {patient.entries.map((entry) => (
           <StyledListItem key={entry.id}>
