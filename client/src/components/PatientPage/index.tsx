@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { styled } from "@mui/system";
+import { List, ListItem } from "@mui/material";
 
-import axios from "axios";
 
-import { DiagnosesEntry, PatientEntry } from "../../types";
+import HospitalIcon from "@mui/icons-material/LocalHospital";
+import WorkIcon from "@mui/icons-material/Work";
+import MonitorHeart from "@mui/icons-material/MonitorHeart";
+
+// import { Male, Female } from '@mui/icons-material';
+
+import { DiagnosesEntry, PatientEntry, SpecificEntry } from "../../types";
 
 import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
@@ -11,6 +18,51 @@ import diagnosesService from "../../services/diagnoses";
 interface PatientInfoProps {
   patients: PatientEntry[];
 }
+
+const StyledList = styled(List)({
+  listStyleType: "none",
+  padding: "10px",
+});
+
+const StyledListItem = styled(ListItem)({
+  border: "1px solid black",
+  borderRadius: "8px",
+  margin: "8px 0", // Adjust margin as needed
+  padding: "16px", // Adjust padding as needed
+  display: "flex", // Set to 'flex'
+  flexDirection: "column", // Set to 'column'
+  alignItems: "flex-start",
+  // Ensure each list item content is displayed in separate rows
+  "& > div": {
+    marginBottom: "8px", // Adjust spacing as needed
+  },
+});
+
+const getIconStyles = (entryType: SpecificEntry['type']): React.CSSProperties => {
+  switch (entryType) {
+    case 'Hospital':
+      return { color: 'blue' }; // Adjust color as needed
+    case 'OccupationalHealthcare':
+      return { color: 'orange' }; // Adjust color as needed
+    case 'HealthCheck':
+      return { color: 'green' }; // Adjust color as needed
+    default:
+      return {};
+  }
+};
+
+const getIconForEntryType = (entryType: SpecificEntry["type"]) => {
+  switch (entryType) {
+    case "Hospital":
+      return <HospitalIcon style={getIconStyles(entryType)} />;
+    case "OccupationalHealthcare":
+      return <WorkIcon style={getIconStyles(entryType)} />;
+    case "HealthCheck":
+      return <MonitorHeart style={getIconStyles(entryType)} />;
+    default:
+      return null;
+  }
+};
 
 const PatientPage: React.FC<PatientInfoProps> = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,7 +95,6 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
   useEffect(() => {
     const fetchDiagnoses = async () => {
       try {
-        // const diagnoseData = await axios.get<DiagnosesEntry[]>("http://localhost:3001/api/diagnoses");
         const diagnoseData = await diagnosesService.getAll();
 
         setDiagnoses(
@@ -88,10 +139,11 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
           <p>no entires submitted.</p>
         </>
       )}
-      <ol>
+      <StyledList>
         {patient.entries.map((entry) => (
-          <li key={entry.id}>
+          <StyledListItem key={entry.id}>
             <div>{entry.date}:</div>
+            <div> {getIconForEntryType(entry.type)}</div>
             <div>{entry.description}</div>
             <div>
               {entry.diagnosisCodes && (
@@ -113,10 +165,10 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
                 </div>
               )}
             </div>
-            <div>-{entry.specialist}</div>
-          </li>
+            <div>diagnoses by: {entry.specialist}</div>
+          </StyledListItem>
         ))}
-      </ol>
+      </StyledList>
     </div>
   );
 };
