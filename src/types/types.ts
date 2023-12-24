@@ -22,11 +22,11 @@ export interface Entry {
   id: string;
   date: string;
   specialist: string;
+  type: string;
 }
 
 export interface HospitalEntry extends Entry {
   type: "Hospital";
-  // diagnosisCodes: string[];
   diagnosisCodes?: Array<DiagnosesEntry["code"]>;
   description: string;
   discharge: {
