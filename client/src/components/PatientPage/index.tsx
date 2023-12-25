@@ -29,14 +29,13 @@ const StyledList = styled(List)({
 const StyledListItem = styled(ListItem)({
   border: "1px solid black",
   borderRadius: "8px",
-  margin: "8px 0", // Adjust margin as needed
-  padding: "16px", // Adjust padding as needed
-  display: "flex", // Set to 'flex'
-  flexDirection: "column", // Set to 'column'
+  margin: "8px 0",
+  padding: "16px",
+  display: "flex",
+  flexDirection: "column", 
   alignItems: "flex-start",
-  // Ensure each list item content is displayed in separate rows
   "& > div": {
-    marginBottom: "8px", // Adjust spacing as needed
+    marginBottom: "8px", 
   },
 });
 
@@ -45,11 +44,11 @@ const getIconStyles = (
 ): React.CSSProperties => {
   switch (entryType) {
     case "Hospital":
-      return { color: "blue" }; // Adjust color as needed
+      return { color: "blue" }; 
     case "OccupationalHealthcare":
-      return { color: "orange" }; // Adjust color as needed
+      return { color: "orange" }; 
     case "HealthCheck":
-      return { color: "green" }; // Adjust color as needed
+      return { color: "green" }; 
     default:
       return {};
   }
@@ -95,7 +94,7 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
     };
 
     fetchPatientInfo();
-  }, [patient]);
+  }, [id]);
 
   useEffect(() => {
     const fetchDiagnoses = async () => {
