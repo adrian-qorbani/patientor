@@ -14,7 +14,7 @@ import { SpecificEntry } from "../../types";
 import patientService from "../../services/patients";
 
 interface EntryFormProps {
-  // onEntrySubmit: (entry: Omit<SpecificEntry, "id">) => void;
+  onEntrySubmit: (entry: Omit<SpecificEntry, "id">) => void;
   patientId: string;
 }
 
@@ -76,6 +76,11 @@ const EntryForm: React.FC<EntryFormProps> = ({ patientId }) => {
     };
 
     console.log("Entry is:", newEntry);
+
+
+
+    
+
 
     try {
       const response = await patientService.addEntryToPatient(

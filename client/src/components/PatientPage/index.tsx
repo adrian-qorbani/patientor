@@ -15,6 +15,7 @@ import patientService from "../../services/patients";
 import diagnosesService from "../../services/diagnoses";
 
 import EntryForm from "./AddEntryForm";
+import axios from "axios";
 
 interface PatientInfoProps {
   patients: PatientEntry[];
@@ -78,12 +79,48 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  const [entries, setEntries] = useState<SpecificEntry[]>([]);
+
+  // submit new entry
+  const submitNewEntry = async (values: SpecificEntry) => {
+    try {
+      if (patient !== null && patient !== undefined) {
+        const response = await patientService.addEntryToPatient(patient.id, values);
+        console.log("RESPONSE IS:", response)
+        const entry: SpecificEntry = transformResponseToSpecificEntry(response);
+        setEntries(entries.concat(entry));
+      } else {
+        // Handle the case when patient is null
+      }
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
+          console.error(message);
+          setError(message);
+        } else {
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  };
+  //
+
   useEffect(() => {
     const fetchPatientInfo = async () => {
       try {
         if (id) {
           const patientData = await patientService.getPatientById(id);
           setPatient(patientData);
+          if (patientData) {
+            setEntries(patientData.entries);
+          }
         } else {
           setError("Patient ID is not defined.");
         }
@@ -95,7 +132,7 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
     };
 
     fetchPatientInfo();
-  }, [patient]);
+  }, [id]);
 
   useEffect(() => {
     const fetchDiagnoses = async () => {
@@ -145,10 +182,10 @@ const PatientPage: React.FC<PatientInfoProps> = () => {
         </>
       )}
 
-      <EntryForm patientId={patient.id} />
+      <EntryForm patientId={patient.id} onEntrySubmit={submitNewEntry} />
 
       <StyledList>
-        {patient.entries.map((entry) => (
+        {entries.map((entry) => (
           <StyledListItem key={entry.id}>
             <div>{entry.date}:</div>
             <div> {getIconForEntryType(entry.type)}</div>
