@@ -10,7 +10,7 @@ const Home = () => {
           backgroundImage: 'url("/hero.jpg")',
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: "500px",
+          height: "450px",
           marginBottom: "2em",
         }}
       ></div>
@@ -26,6 +26,9 @@ const Home = () => {
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
           pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.{" "}
+        </Typography>
+        <Typography variant="h6" component="div" sx={{ mb: 2 }}>
+          This project is work-in-progress.{" "}
         </Typography>
       </Container>
     </div>

@@ -9,8 +9,10 @@ import {
   MenuItem,
   IconButton,
   Menu,
+  Grid,
 } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the AccountCircleIcon
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 import { PatientEntry } from "./types";
 
@@ -37,14 +39,14 @@ const App = () => {
 
   const handleLogin = () => {
     setLoggedIn(true);
-    setUsername("DR. Smith"); 
-    handleMenuClose()
+    setUsername("DR. Smith");
+    handleMenuClose();
   };
 
   const handleLogout = () => {
     setLoggedIn(false);
     setUsername(null);
-    handleMenuClose(); 
+    handleMenuClose();
   };
 
   useEffect(() => {
@@ -58,7 +60,13 @@ const App = () => {
   return (
     <div className="App">
       <Router>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+          }}
+        >
           <AppBar position="static" sx={{ margin: 0 }}>
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -66,10 +74,7 @@ const App = () => {
               </Typography>
               {loggedIn ? (
                 <>
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ marginRight: 4 }}
-                  >
+                  <Typography variant="subtitle2" sx={{ marginRight: 4 }}>
                     Welcome {username} |
                   </Typography>
                   <Button
@@ -162,6 +167,26 @@ const App = () => {
               />
             </Routes>
           </Container>
+          {/* Footer */}
+          <Grid
+            container
+            component="footer"
+            justifyContent="center"
+            alignItems="center"
+            sx={{ p: 2 }}
+          >
+            <Typography variant="subtitle2" sx={{ marginRight: 1 }}>
+            2023 - Patienter - View on GitHub
+            </Typography>
+            <a
+              href="https://github.com/adrian-qorbani/patientor"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <GitHubIcon sx={{ fontSize: 30, mr: 1 }} />
+            </a>
+          </Grid>
         </div>
       </Router>
     </div>
