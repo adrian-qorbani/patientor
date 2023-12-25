@@ -67,6 +67,4 @@ export interface DiagnosesEntry {
   latin?: string;
 }
 
-export interface PatientFormValues {
-  // 
-}
+export type PatientFormValues = Omit<PatientEntry, "id">;

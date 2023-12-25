@@ -18,7 +18,7 @@ import EntryForm from "./AddEntryForm";
 
 interface PatientInfoProps {
   patients: PatientEntry[];
-  entries: SpecificEntry[];
+  // entries: SpecificEntry[];
 }
 
 const StyledList = styled(List)({

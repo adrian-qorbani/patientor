@@ -12,7 +12,7 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
     "gender" in object &&
     "occupation" in object &&
     "dateOfBirth" in object &&
-    "ssn" in object &&
+    "ssn" in object && 
     "entries" in object
   ) {
     const newEntry: NewPatientEntry = {
