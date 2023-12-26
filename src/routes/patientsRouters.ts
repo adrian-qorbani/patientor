@@ -7,6 +7,7 @@ const router = express.Router();
 router.get("/", async (_req, res) => {
   try {
     const entries = await patientService.getNonSensitiveEntries();
+    console.log(entries)
     res.json(entries);
   } catch (error) {
     console.error(error);
@@ -75,5 +76,35 @@ router.post("/", async (req, res) => {
 //   res.status(201).json(newEntry);
 //   return
 // });
+
+router.post('/:id/entries', async (req, res) => {
+  try {
+    const requestedPatient = await patientService.findById(req.params.id);
+  
+    if (!requestedPatient) {
+      return res.status(404).json({ error: 'Patient not found' });
+    }
+
+    const { date, specialist, type, ...entryData } = req.body;
+
+    // Used addEntriesEntry for existing patient
+    const newEntry = await patientService.addEntriesEntry(requestedPatient, {
+      date,
+      specialist,
+      type,
+      ...entryData,
+    });
+    if (!newEntry) {
+      return res.status(500).json({ error: 'Error adding entry for the patient.' });
+    }
+
+    requestedPatient.entries.push(newEntry)
+    res.status(201).json(newEntry);
+    return
+  } catch (error) {
+    res.status(500).json({ error: error });
+    return
+  }
+});
 
 export default router;
