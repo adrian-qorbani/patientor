@@ -1,19 +1,23 @@
 import express from "express";
+import { validationResult } from "express-validator";
+
 import { User } from "../models/user";
 import bcrypt from "bcrypt";
 const router = express.Router();
 
-router.get("/auth/register", async (_req, res) => {
-  res.status(200).send("user registration");
-});
-
 router.post("/auth/register", async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        status: 400,
+        message: "Validation failed.",
+        errors: errors.array(),
+      });
+    }
+
     const user = req.body;
-    const { name, email, password } = user;
-
-    console.log("user is", user);
-
+    const { username, email, password } = user;
     const isEmailAllReadyExist = await User.findOne({
       email: email,
     });
@@ -30,24 +34,26 @@ router.post("/auth/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     const newUser = await User.create({
-      name,
+      username,
       email,
       password: hashedPassword,
     });
 
-    console.log("newUser:", newUser);
-
-    return res.status(200).json({
+    return res.status(201).json({
       status: 201,
       success: true,
       message: "User created Successfully.",
-      user: newUser,
+      user: {
+        id: newUser.id,
+        name: newUser.username,
+        email: newUser.email,
+      },
     });
   } catch (error: any) {
-    console.log(error);
-    return res.status(400).json({
-      status: 400,
-      message: error.message.toString(),
+    console.error("Registration error:", error);
+    return res.status(500).json({
+      status: 500,
+      message: `Internal Server Error: ${error.message.toString()}`,
     });
   }
 });

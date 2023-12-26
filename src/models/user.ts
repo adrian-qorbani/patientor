@@ -3,7 +3,7 @@ import { UserDocument } from "../types/types";
 
 const UserSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
       required: true,
     },
