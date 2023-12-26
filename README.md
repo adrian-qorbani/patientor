@@ -8,13 +8,16 @@ A full-stack medical record application designed to handle diagnoses and health 
 - Vite
 - React
 - Node.js (Express.js)
-- Material-UI
+- Normalize.css + Material-UI
 - Jest
 
 ### Formating/Linting
 - Prettier
 - ESLint
 - ESlint-config-prettier
+
+### Utilities
+bcrypt, cors, dotenv, jsonwebtoken, express-validator, mongodb-memory-server (for testing)
 
 ## Project Structure
 
@@ -23,6 +26,8 @@ A full-stack medical record application designed to handle diagnoses and health 
 - **`/src/__tests__`**: Holds the Jest tests for the server.
 - **`/client/__tests__`**: Holds the Jest tests for the client. (not implanted yet)
 - **`/e2e/`**: Holds the Cypress tests for the end-to-end testing. (not implanted yet)
+- **`/.env`**: Put your mongodb uri and port
+
 
 ## Features (completed and pending)
 
@@ -37,12 +42,12 @@ A full-stack medical record application designed to handle diagnoses and health 
 - [ ] Integrate Jest for unit testing frontend
 - [ ] Conduct Cypress for end-to-end testing
 - [ ] Enhance frontend for better user experience
-- [ ] Implement user administration and authentication
+- [x] Implement user administration and authentication
 - [ ] Integrate user administration and authentication
-- [ ] Integrate MongoDB for data storage and users
+- [x] Integrate MongoDB for data storage and users
 - [ ] Refactor client code for better maintainability
 - [x] Refactor server code for better maintainability
-- [ ] Enhance error handling in the backend
+- [x] Enhance error handling in the backend
 - [ ] Implement continuous integration for automated testing and deployment
 
 
