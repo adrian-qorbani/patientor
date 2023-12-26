@@ -1,5 +1,8 @@
 import { v4 as uuidv4 } from "uuid";
-import patientsData from "../../data/patients_entries";
+// import patientsData from "../../data/patients_entries";
+
+import { PatientModel } from "../models/patient";
+
 import {
   NewPatientEntry,
   NonSensitivePatientEntry,
@@ -11,44 +14,57 @@ import {
   HealthCheckRating
 } from "../types/types";
 
-const entires: PatientEntry[] = patientsData;
-// const patientsEntires = patientsData.entries;
+// const entires: PatientEntry[] = patientsData;
 
-
-// All entries
-const getPatientsEntry = (): PatientEntry[] => {
-  return entires;
+const getPatientsEntry = async (): Promise<PatientEntry[]> => {
+  try {
+    const patientEntries = await PatientModel.find();
+    return patientEntries;
+  } catch (error) {
+    throw new Error('Error retrieving patient entries from the database');
+  }
 };
 
-// All entries (-ssn)
-const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
-  return entires.map(({ id, name, gender, occupation, dateOfBirth, entries }) => ({
-    id,
-    name,
-    gender,
-    occupation,
-    dateOfBirth,
-    entries
-  }));
+const getNonSensitiveEntries = async (): Promise<NonSensitivePatientEntry[]> => {
+  try {
+    const entries = await PatientModel.find({}, '-ssn');
+    console.log(entries)
+    return entries.map(({ id, name, gender, occupation, dateOfBirth, entries }) => ({
+      id,
+      name,
+      gender,
+      occupation,
+      dateOfBirth,
+      entries,
+    }));
+  } catch (error) {
+    throw new Error('Error retrieving non-sensitive patient entries from the database');
+  }
 };
 
-const findById = (id: string): PatientEntry | undefined => {
-  const entry = entires.find((d) => d.id === id);
-  return entry;
+const findById = async (id: string): Promise<PatientEntry | undefined> => {
+  try {
+    const entry = await PatientModel.findById(id);
+    return entry?.toJSON();
+  } catch (error) {
+    throw new Error('Error retrieving patient entry by ID from the database.');
+  }
 };
 
-// const addPatientEntry = () => {
-//   return null;
-// };
-const addPatientEntry = (entry: NewPatientEntry): PatientEntry => {
-  const newPatientEnry = {
-    id: uuidv4(),
-    ...entry,
-  };
+const addPatientEntry = async (entry: NewPatientEntry): Promise<PatientEntry> => {
+  try {
+    const newPatientEntry = new PatientModel({
+      id: uuidv4(),
+      ...entry,
+    });
 
-  entires.push(newPatientEnry);
-  return newPatientEnry;
+    const savedEntry = await newPatientEntry.save();
+    return savedEntry.toJSON();
+  } catch (error) {
+    throw new Error(`Error adding patient entry to the database: ${error}`);
+  }
 };
+
 
 const addEntriesEntry = (
   patient: PatientEntry,
