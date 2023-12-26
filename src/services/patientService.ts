@@ -55,14 +55,12 @@ const addEntriesEntry = (
   entryData: Omit<SpecificEntry, 'id'>
 ): SpecificEntry => {
 
-  console.log(patient);
+  console.log(patient.comment)
 
   const newEntry = {
     id: uuidv4(),
     ...entryData,
   };
-
-  console.log("new entry is:", newEntry)
 
   if ('type' in entryData) {
     switch (entryData.type) {

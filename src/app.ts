@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from 'cors';
 import patientsRouters from './routes/patientsRouters';
 import diagnosesRouters from './routes/diagnosesRouter';
+import userRouter from './routes/userRouter'
 
 const app: Application = express();
 
@@ -23,5 +24,6 @@ app.get('/api/ping', (_req, res) => {
 
 app.use('/api/patients', patientsRouters);
 app.use('/api/diagnoses', diagnosesRouters);
+app.use('/', userRouter)
 
 export default app;
