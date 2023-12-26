@@ -1,6 +1,5 @@
 import express from "express";
 import { validationResult } from "express-validator";
-
 import { User } from "../models/user";
 import bcrypt from "bcrypt";
 const router = express.Router();
