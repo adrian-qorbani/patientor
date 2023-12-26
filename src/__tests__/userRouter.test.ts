@@ -1,5 +1,5 @@
 import request from "supertest";
-import mongoose, { ConnectOptions } from "mongoose";
+import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 import app from "../app"; // Assuming your Express app is defined in a file called 'app.ts'
 import { User } from "../models/user";
@@ -10,10 +10,7 @@ beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   
-  await mongoose.connect(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-  } as ConnectOptions);
+  await mongoose.connect(mongoUri);
 })
 
 afterAll(async () => {
