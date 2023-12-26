@@ -1,7 +1,7 @@
 import request from "supertest";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import app from "../app"; // Assuming your Express app is defined in a file called 'app.ts'
+import app from "../app";
 import { User } from "../models/user";
 import bcrypt from "bcrypt";
 
@@ -42,8 +42,6 @@ describe("User Registration", () => {
     expect(response.body.user).toHaveProperty("id");
     expect(response.body.user.name).toBe(newUser.username);
     expect(response.body.user.email).toBe(newUser.email);
-
-    // Optionally, you can check if the password is not returned in the response
     expect(response.body.user).not.toHaveProperty("password");
   });
 
@@ -78,12 +76,10 @@ describe("Login Route", () => {
     // Create a test user
     const newUser = {
       username: "testuser",
-      password: await bcrypt.hash("testpassword", 10), // Assuming you have bcrypt in scope
+      password: await bcrypt.hash("testpassword", 10), 
       email: "myemail@gmail.com",
     };
     await User.create(newUser);
-
-    // Make a request to the login route
     const response = await request(app)
       .post("/auth/login")
       .send({
@@ -91,17 +87,13 @@ describe("Login Route", () => {
         password: "testpassword",
       })
       .expect(200);
-
-    // Ensure the response structure is as expected
     expect(response.body).toHaveProperty("token");
     expect(response.body).toHaveProperty("username", "testuser");
-    expect(response.body).toHaveProperty("name"); // Assuming your user model has a 'name' field
+    expect(response.body).toHaveProperty("name"); 
 
-    // You can add more assertions as needed based on your actual response structure
   });
 
   it("should return a 401 for an invalid username or password", async () => {
-    // Make a request to the login route with invalid credentials
     const response = await request(app)
       .post("/auth/login")
       .send({
@@ -110,7 +102,6 @@ describe("Login Route", () => {
       })
       .expect(401);
 
-    // Ensure the response structure is as expected for an authentication failure
     expect(response.body).toHaveProperty(
       "error",
       "Invalid username or password."
