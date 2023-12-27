@@ -71,47 +71,26 @@ describe("POST / endpoint", () => {
   });
 });
 
-describe("Patient API", () => {
-  it.skip("should create a new patient entry", async () => {
-    const newPatient: NewPatientEntry = {
-      // userId: "658a9be889b57d919d26f22b",
-      name: "John Doe",
-      gender: Gender.Male,
-      occupation: "Programmer",
-      dateOfBirth: "1990-01-01",
-      ssn: "554-874-961",
-      entries: [],
-    };
-
-    const response = await request(app)
-      .post("/api/patients")
-      .send(newPatient)
-      .expect(201);
-
-    expect(response.body).toMatchObject(newPatient);
-  });
-
-  // Add more test cases for other endpoints and scenarios
-});
 
 describe("Express server main entry", () => {
-  it.skip("Should return 404 on non-existing routes", async () => {
+  it("Should return 404 on non-existing routes", async () => {
     const response = await request(app).get("/api/somethingelse");
     expect(response.status).toBe(404);
   });
 });
 
 describe("Patients route and services on api/patients", () => {
-  it.skip("should return status 200", async () => {
+  it("should return status 200", async () => {
     const response = await request(app).get("/api/patients");
     expect(response.status).toBe(200);
   });
 
-  it.skip("should return an array of hardcoded patients", async () => {
+  it("should return an array of patients", async () => {
+    // TASK: should use different mongodb uri for testing and dummy patients (soon)
     const response = await request(app).get("/api/patients");
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
-    expect(response.body).toHaveLength(5);
+    expect(response.body).toHaveLength(0);
   });
 
   it.skip("should each entry have correct key/value form", async () => {
