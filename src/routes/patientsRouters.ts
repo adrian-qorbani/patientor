@@ -1,49 +1,31 @@
-import express from "express";
-import { Request, Response } from "express";
+// import express from "express";
+import { Request, Response, Router } from "express";
 import patientService from "../services/patientService";
 import toNewPatientEntry from "../utils/routersUtility";
 import { User } from "../models/user";
-const router = express.Router();
-import jwt, { Secret } from "jsonwebtoken";
+// const router = express.Router();
+// import jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-import { getTokenFrom } from "../utils/middleware";
+import { authenticateToken } from "../utils/middleware";
 
-router.get("/", async (req: Request, res: Response) => {
+const router = Router();
+router.use(authenticateToken);
+
+router.get("/", async (_req: Request, res: Response) => {
   try {
-    const token = getTokenFrom(req);
-
-    if (!token) {
-      return res.status(401).json({ error: "Token missing" });
-    }
-
-    const secret = process.env.SECRET as Secret | undefined;
-    if (!secret) {
-      return res
-        .status(500)
-        .json({ error: "Internal server error: Missing JWT secret" });
-    }
-
-    const decodedToken = jwt.verify(token, secret) as
-      | { id: string }
-      | undefined;
-
-    if (!decodedToken || !decodedToken.id) {
-      return res.status(401).json({ error: "Token invalid" });
-    }
-
-    const user = await User.findById(decodedToken.id);
-
+    // Now you can directly access the authenticated user from res.locals.user
+    const user = res.locals.user as typeof User | undefined;
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(401).json({ error: "User not authenticated" });
     }
+
     const entries = await patientService.getNonSensitiveEntries();
     console.log(entries);
     return res.json(entries);
   } catch (error) {
     console.error("Error in route:", error);
-    res.status(500).json({ error: "Internal server error" });
-    return;
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
