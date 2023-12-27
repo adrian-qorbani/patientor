@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
 // import patientsData from "../../data/patients_entries";
-
 import { PatientModel } from "../models/patient";
 
 import {
@@ -15,6 +14,8 @@ import {
 } from "../types/types";
 
 // const entires: PatientEntry[] = patientsData;
+
+
 
 const getPatientsEntry = async (): Promise<PatientEntry[]> => {
   try {

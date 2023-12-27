@@ -1,17 +1,49 @@
 import express from "express";
+import { Request, Response } from "express";
 import patientService from "../services/patientService";
 import toNewPatientEntry from "../utils/routersUtility";
 import { User } from "../models/user";
 const router = express.Router();
+import jwt, { Secret } from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
+import { getTokenFrom } from "../utils/middleware";
 
-router.get("/", async (_req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
+    const token = getTokenFrom(req);
+
+    if (!token) {
+      return res.status(401).json({ error: "Token missing" });
+    }
+
+    const secret = process.env.SECRET as Secret | undefined;
+    if (!secret) {
+      return res
+        .status(500)
+        .json({ error: "Internal server error: Missing JWT secret" });
+    }
+
+    const decodedToken = jwt.verify(token, secret) as
+      | { id: string }
+      | undefined;
+
+    if (!decodedToken || !decodedToken.id) {
+      return res.status(401).json({ error: "Token invalid" });
+    }
+
+    const user = await User.findById(decodedToken.id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
     const entries = await patientService.getNonSensitiveEntries();
-    console.log(entries)
-    res.json(entries);
+    console.log(entries);
+    return res.json(entries);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error in route:", error);
+    res.status(500).json({ error: "Internal server error" });
+    return;
   }
 });
 
@@ -25,17 +57,17 @@ router.get("/:id", async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 router.post("/", async (req, res) => {
   try {
-    const body = req.body
-    const user = await User.findById(body.userId)
-    console.log("USER IS: ", user)
+    const body = req.body;
+    const user = await User.findById(body.userId);
+    console.log("USER IS: ", user);
     if (!user) {
-      res.status(404).json({ error: 'User not found' });
+      res.status(404).json({ error: "User not found" });
     }
     const NewPatientEntry = {
       ...toNewPatientEntry(body),
@@ -52,12 +84,11 @@ router.post("/", async (req, res) => {
   }
 });
 
-
 // ALERT: POST is broken and needs repair
 
 // router.post('/:id/entries', (req, res) => {
 //   const requestedPatient = patientService.findById(req.params.id);
-  
+
 //   if (!requestedPatient) {
 //     return res.status(404).json({ error: 'Patient not found' });
 //   }
@@ -77,12 +108,12 @@ router.post("/", async (req, res) => {
 //   return
 // });
 
-router.post('/:id/entries', async (req, res) => {
+router.post("/:id/entries", async (req, res) => {
   try {
     const requestedPatient = await patientService.findById(req.params.id);
-  
+
     if (!requestedPatient) {
-      return res.status(404).json({ error: 'Patient not found' });
+      return res.status(404).json({ error: "Patient not found" });
     }
 
     const { date, specialist, type, ...entryData } = req.body;
@@ -95,15 +126,17 @@ router.post('/:id/entries', async (req, res) => {
       ...entryData,
     });
     if (!newEntry) {
-      return res.status(500).json({ error: 'Error adding entry for the patient.' });
+      return res
+        .status(500)
+        .json({ error: "Error adding entry for the patient." });
     }
 
-    requestedPatient.entries.push(newEntry)
+    requestedPatient.entries.push(newEntry);
     res.status(201).json(newEntry);
-    return
+    return;
   } catch (error) {
     res.status(500).json({ error: error });
-    return
+    return;
   }
 });
 
