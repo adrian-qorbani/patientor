@@ -3,8 +3,6 @@ import { Request, Response, Router } from "express";
 import patientService from "../services/patientService";
 import toNewPatientEntry from "../utils/routersUtility";
 import { User } from "../models/user";
-// const router = express.Router();
-// import jwt, { Secret } from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
 import { authenticateToken } from "../utils/middleware";
@@ -14,7 +12,7 @@ router.use(authenticateToken);
 
 router.get("/", async (_req: Request, res: Response) => {
   try {
-    // Now you can directly access the authenticated user from res.locals.user
+    // directly access the authenticated user from res.locals.user
     const user = res.locals.user as typeof User | undefined;
     if (!user) {
       return res.status(401).json({ error: "User not authenticated" });
@@ -65,30 +63,6 @@ router.post("/", async (req, res) => {
     res.status(400).send(errorMessage);
   }
 });
-
-// ALERT: POST is broken and needs repair
-
-// router.post('/:id/entries', (req, res) => {
-//   const requestedPatient = patientService.findById(req.params.id);
-
-//   if (!requestedPatient) {
-//     return res.status(404).json({ error: 'Patient not found' });
-//   }
-
-//   const { date, specialist, type, ...entryData } = req.body;
-
-//   // Used addEntriesEntry for existing patient
-//   const newEntry = patientService.addEntriesEntry(requestedPatient, {
-//     date,
-//     specialist,
-//     type,
-//     ...entryData,
-//   });
-
-//   requestedPatient.entries.push(newEntry)
-//   res.status(201).json(newEntry);
-//   return
-// });
 
 router.post("/:id/entries", async (req, res) => {
   try {
