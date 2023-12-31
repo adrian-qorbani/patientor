@@ -19,7 +19,7 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
 import GitHubIcon from "@mui/icons-material/GitHub";
 
-import { PatientEntry, Credentials } from "./types";
+import { PatientEntry, Credentials, User } from "./types";
 
 import patientService from "./services/patients";
 import userService from "./services/login";
@@ -35,7 +35,8 @@ const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [user, setUser] = useState<string | null>(null);
+  // const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -74,25 +75,25 @@ const App = () => {
   const handleLoginFormSubmit = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      const user = await userService.login({
+      const response = await userService.login({
         username,
         password,
       } as Credentials); // Credentials type assertion 
-      setUser(user);
+      console.log("response is:", response)
+      setUser(response);
       setUsername("");
       setPassword("");
     } catch (exception) {
-      console.log("wrong credentials");
+      console.log("somethings wrong:", exception);
     }
-    console.log("Username:", username);
-    console.log("Password:", password);
+    console.log("user is:", user)
     setLoginDialogOpen(false);
   };
 
   useEffect(() => {
     const fetchPatientList = async () => {
-      const patients = await patientService.getAll();
-      setPatients(patients);
+      // const patients = await patientService.getAll();
+      // setPatients(patients);
     };
     void fetchPatientList();
   }, []);
