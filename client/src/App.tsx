@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import {
   Button,
@@ -10,13 +10,19 @@ import {
   IconButton,
   Menu,
   Grid,
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  TextField,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle"; // Import the AccountCircleIcon
+import AccountCircleIcon from "@mui/icons-material/AccountCircle"; 
 import GitHubIcon from "@mui/icons-material/GitHub";
 
-import { PatientEntry } from "./types";
+import { PatientEntry, Credentials } from "./types";
 
 import patientService from "./services/patients";
+import userService from "./services/login";
 import PatientListPage from "./components/PatientListPage";
 import PatientPage from "./components/PatientPage";
 import Home from "./components/Home";
@@ -27,7 +33,10 @@ const App = () => {
   const [patients, setPatients] = useState<PatientEntry[]>([]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState<string | null>(null);
+  const [username, setUsername] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [user, setUser] = useState<string | null>(null);
+  const [loginDialogOpen, setLoginDialogOpen] = useState<boolean>(false);
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -38,15 +47,46 @@ const App = () => {
   };
 
   const handleLogin = () => {
-    setLoggedIn(true);
-    setUsername("DR. Smith");
+    // setLoggedIn(true);
+    // setUsername("DR. Smith");
+    setLoginDialogOpen(true);
     handleMenuClose();
+  };
+
+  const handleLoginDialogClose = () => {
+    setLoginDialogOpen(false);
   };
 
   const handleLogout = () => {
     setLoggedIn(false);
-    setUsername(null);
+    setUsername('');
     handleMenuClose();
+  };
+
+  const handleUsernameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  const handleLoginFormSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    try {
+      const user = await userService.login({
+        username,
+        password,
+      } as Credentials); // Credentials type assertion 
+      setUser(user);
+      setUsername("");
+      setPassword("");
+    } catch (exception) {
+      console.log("wrong credentials");
+    }
+    console.log("Username:", username);
+    console.log("Password:", password);
+    setLoginDialogOpen(false);
   };
 
   useEffect(() => {
@@ -145,6 +185,38 @@ const App = () => {
                   </Menu>
                 </>
               )}
+              {/* Login Dialog */}
+              <Dialog open={loginDialogOpen} onClose={handleLoginDialogClose}>
+                <DialogTitle>Login</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Enter your username and password to log in:
+                  </DialogContentText>
+                  <form onSubmit={handleLoginFormSubmit}>
+                    <TextField
+                      label="Username"
+                      type="text"
+                      value={username}
+                      onChange={handleUsernameChange}
+                      margin="normal"
+                      required
+                      fullWidth
+                    />
+                    <TextField
+                      label="Password"
+                      type="password"
+                      value={password}
+                      onChange={handlePasswordChange}
+                      margin="normal"
+                      required
+                      fullWidth
+                    />
+                    <Button type="submit" color="primary">
+                      Login
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </Toolbar>
           </AppBar>
           <Routes>
@@ -176,7 +248,7 @@ const App = () => {
             sx={{ p: 2 }}
           >
             <Typography variant="subtitle2" sx={{ marginRight: 1 }}>
-            2023 - Patienter - View on GitHub
+              2023 - Patienter - View on GitHub
             </Typography>
             <a
               href="https://github.com/adrian-qorbani/patientor"
