@@ -70,3 +70,8 @@ export interface DiagnosesEntry {
 export interface PatientFormValues {
   // 
 }
+
+export interface Credentials {
+  username: string;
+  password: string;
+}
